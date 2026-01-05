@@ -46,191 +46,435 @@ if (isset($_GET['error'])) {
 }
 ?>
 
-<?php include 'header.php'; ?>
 
-<style>
-    body {
-        min-height: 100vh;
-        background: radial-gradient(circle at top left, #0d6efd 0, #20c997 35%, #f8f9fa 80%);
-    }
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-    .login-wrapper {
-        min-height: calc(100vh - 80px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    .login-card {
-        border: none;
-        border-radius: 1.2rem;
-        overflow: hidden;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(18px);
-        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.35);
-    }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #1a1a2e;
+            padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 15px) env(safe-area-inset-bottom, 15px) env(safe-area-inset-left, 15px);
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    .login-illustration {
-        background: linear-gradient(145deg, rgba(13,110,253,0.95), rgba(32,201,151,0.95));
-        color: #fff;
-    }
+        /* Main Auth Container - Glowing Border */
+        .auth-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            min-height: 520px;
+            display: flex;
+            border: 2px solid #00d4ff;
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
+            overflow: hidden;
+            margin: 20px auto;
+            background: #1a1a2e;
+        }
 
-    .login-illustration h3 {
-        font-weight: 600;
-    }
+        /* Left: Login Form - Dark Panel */
+        .credentials-panel {
+            width: 50%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            background: #121222;
+            z-index: 2;
+        }
 
-    .badge-pill-soft {
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.14);
-        padding: 0.25rem 0.75rem;
-        font-size: 0.75rem;
-    }
+        .credentials-panel h2 {
+            font-size: 30px;
+            text-align: left;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
 
-    .pulse-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        background: #0df3a5;
-        box-shadow: 0 0 0 0 rgba(13, 243, 165, 0.5);
-        animation: pulse 1.5s infinite;
-    }
+        .credentials-panel p {
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 24px;
+            color: #aaa;
+        }
 
-    @keyframes pulse {
-        0%   { box-shadow: 0 0 0 0 rgba(13, 243, 165, 0.5); }
-        70%  { box-shadow: 0 0 0 10px rgba(13, 243, 165, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(13, 243, 165, 0); }
-    }
+        .field-wrapper {
+            position: relative;
+            width: 100%;
+            margin-top: 20px;
+        }
 
-    .login-form-card {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(25px);
-    }
-</style>
+        .field-wrapper input {
+            width: 100%;
+            padding: 12px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #444;
+            outline: none;
+            font-size: 16px;
+            color: #fff;
+            font-weight: 500;
+        }
 
-<div class="login-wrapper">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-9">
-                <div class="card login-card">
-                    <div class="row g-0">
-                        <!-- Kolom kiri: ilustrasi / info -->
-                        <div class="col-md-5 d-none d-md-flex login-illustration flex-column justify-content-between p-4">
-                            <div>
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="pulse-dot me-2"></div>
-                                    <span class="fw-semibold">ClinicFlow</span>
-                                </div>
-                                <h3 class="mb-2">Portal Klinik Modern</h3>
-                                <p class="mb-3">
-                                    Kelola jadwal dokter, booking pasien, dan antrian secara real-time
-                                    dalam satu sistem terintegrasi.
-                                </p>
+        .field-wrapper input:focus,
+        .field-wrapper input:not(:placeholder-shown) {
+            border-bottom-color: #00d4ff;
+        }
 
-                                <div class="d-flex flex-wrap gap-2 mt-3">
-                                    <span class="badge-pill-soft">
-                                        Jadwal Dokter Terupdate
-                                    </span>
-                                    <span class="badge-pill-soft">
-                                        Booking Pasien Online
-                                    </span>
-                                    <span class="badge-pill-soft">
-                                        Manajemen Antrian
-                                    </span>
-                                </div>
-                            </div>
+        .field-wrapper label {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            font-size: 16px;
+            color: #bbb;
+            pointer-events: none;
+            transition: 0.3s ease;
+        }
 
-                            <div class="small opacity-75">
-                                “Healthcare that flows” – pastikan data klinik selalu aman dan terkelola dengan baik.
-                            </div>
-                        </div>
+        .field-wrapper input:focus ~ label,
+        .field-wrapper input:not(:placeholder-shown) ~ label {
+            top: -10px;
+            font-size: 13px;
+            color: #00d4ff;
+        }
 
-                        <!-- Kolom kanan: form login -->
-                        <div class="col-md-7">
-                            <div class="login-form-card h-100 p-4 p-md-5">
-                                <h4 class="mb-3 text-center">Login ClinicFlow</h4>
-                                <p class="text-muted text-center mb-4">
-                                    Masuk untuk mengelola layanan klinik Anda.
-                                </p>
+        .field-wrapper .toggle-password {
+            position: absolute;
+            right: 0;
+            top: 12px;
+            background: transparent;
+            border: none;
+            color: #bbb;
+            cursor: pointer;
+            font-size: 18px;
+        }
 
-                                <?php if (!empty($error)) : ?>
-                                    <div class="alert alert-danger py-2">
-                                        <?php echo htmlspecialchars($error); ?>
-                                    </div>
-                                <?php endif; ?>
+        .field-wrapper input:focus ~ .toggle-password,
+        .field-wrapper input:not(:placeholder-shown) ~ .toggle-password {
+            color: #00d4ff;
+        }
 
-                                <form method="post" action="proses_login.php">
-                                    <div class="mb-3">
-                                        <label class="form-label">Email</label>
-                                        <input
-                                            type="text"
-                                            name="username"
-                                            class="form-control"
-                                            required
-                                            autofocus
-                                            placeholder="contoh@clinicflow.com"
-                                        >
-                                    </div>
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            font-size: 13px;
+        }
 
-                                    <div class="mb-2">
-                                        <label class="form-label">Password</label>
-                                        <div class="input-group">
-                                            <input
-                                                type="password"
-                                                name="password"
-                                                id="password"
-                                                class="form-control"
-                                                required
-                                            >
-                                            <button
-                                                class="btn btn-outline-secondary"
-                                                type="button"
-                                                id="togglePassword"
-                                            >
-                                                👁
-                                            </button>
-                                        </div>
-                                    </div>
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
 
-                                    <div class="d-flex justify-content-between align-items-center mb-3 small">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="rememberMe">
-                                            <label class="form-check-label" for="rememberMe">
-                                                Ingat saya
-                                            </label>
-                                        </div>
-                                        <!-- Link ke halaman lupa password -->
-                                        <a href="forgot_password.php" class="text-decoration-none">
-                                            Lupa password?
-                                        </a>
-                                    </div>
+        .remember-me input {
+            accent-color: #00d4ff;
+        }
 
-                                    <button type="submit" class="btn btn-primary w-100 mb-2">
-                                        Login
-                                    </button>
+        .forgot-password {
+            color: #00d4ff;
+            text-decoration: none;
+        }
 
-                                    <div class="text-center mt-2">
-                                        <small class="text-muted">Belum punya akun?</small><br>
-                                        <a href="register_pasien.php">Daftar sebagai Pasien</a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div> <!-- row -->
-                </div> <!-- card -->
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+       .submit-button {
+            position: relative;
+            width: 100%;
+            height: 45px;
+            background: transparent;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            border: 2px solid #00d4ff;
+            overflow: hidden;
+            margin-top: 24px;
+            color: #fff;
+        }
+
+        .submit-button::before {
+            content: "";
+            position: absolute;
+            height: 300%;
+            width: 100%;
+            background: linear-gradient(#1a1a2e, #00d4ff, #1a1a2e, #00d4ff);
+            top: -100%;
+            left: 0;
+            z-index: -1;
+            transition: 0.5s;
+        }
+
+        .submit-button:hover::before {
+            top: 0;
+        }
+        .switch-link {
+            text-align: left;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .switch-link a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .switch-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Right: Welcome Panel - Blue Gradient */
+        .welcome-section {
+            width: 50%;
+            padding: 40px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #0d6efd, #20c997); /* Blue to Teal */
+            color: #fff;
+        }
+
+        .welcome-section h2 {
+            text-transform: uppercase;
+            font-size: 28px;
+            line-height: 1.3;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+
+        .welcome-section p {
+            font-size: 15px;
+            opacity: 0.95;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .badge-pill-soft {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Alert */
+        .alert {
+            background: rgba(255, 50, 50, 0.2);
+            border: 1px solid #ff3232;
+            color: #ff9999;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .auth-wrapper {
+                flex-direction: column;
+                min-height: auto;
+                max-width: 100%;
+                margin: 20px auto;
+            }
+
+            .credentials-panel,
+            .welcome-section {
+                width: 100%;
+                padding: 30px 25px;
+            }
+
+            .welcome-section {
+                padding: 30px 25px 80px 25px;
+                background: linear-gradient(135deg, #0d6efd, #20c997);
+            }
+
+            .welcome-section h2,
+            .welcome-section p,
+            .badge-list,
+            .quote {
+                text-align: center;
+            }
+
+            .welcome-section h2 {
+                font-size: 24px;
+            }
+
+            .badge-list {
+                justify-content: center;
+            }
+
+            .credentials-panel h2,
+            .credentials-panel p,
+            .switch-link {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .credentials-panel,
+            .welcome-section {
+                padding: 24px 20px;
+            }
+
+            .credentials-panel h2,
+            .welcome-section h2 {
+                font-size: 22px;
+            }
+
+            .field-wrapper input,
+            .field-wrapper label {
+                font-size: 14px;
+            }
+
+            .field-wrapper label {
+                top: 10px;
+            }
+
+            .submit-button {
+                height: 42px;
+                font-size: 15px;
+            }
+
+            .switch-link {
+                font-size: 13px;
+            }
+
+            .auth-wrapper {
+                margin: 15px auto;
+            }
+        }
+
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 15px;
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        .footer a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+            color: #00b8d4;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Main Auth Container -->
+<div class="auth-wrapper">
+    <!-- Left: Login Form -->
+    <div class="credentials-panel">
+        <h2>Login</h2>
+        <p>Masuk untuk mengelola layanan Anda.</p>
+
+        <?php if (!empty($error)) : ?>
+            <div class="alert">
+                <?php echo htmlspecialchars($error); ?>
             </div>
+        <?php endif; ?>
+
+        <form method="post" action="proses_login.php">
+            <div class="field-wrapper">
+                <input type="text" name="username" id="email" required autofocus placeholder=" ">
+                <label for="email">Email</label>
+            </div>
+
+            <div class="field-wrapper">
+                <input type="password" name="password" id="password" required placeholder=" ">
+                <label for="password">Password</label>
+                <button type="button" class="toggle-password" id="togglePassword">👁</button>
+            </div>
+
+            <div class="form-footer">
+                <label class="remember-me" for="rememberMe">
+                    <input type="checkbox" id="rememberMe" name="remember">
+                    Ingat saya
+                </label>
+                <a href="forgot_password.php" class="forgot-password">Lupa password?</a>
+            </div>
+
+            <button type="submit" class="submit-button">Login</button>
+        </form>
+
+        <div class="switch-link">
+            Belum punya akun? <a href="register.php">Daftar</a>
+        </div>
+    </div>
+
+    <!-- Right: Welcome / Info Panel -->
+    <div class="welcome-section">
+        <div>
+            <h2>Sistem Manajemen Modern</h2>
+            <p>Kelola jadwal, booking, dan antrian secara real time dalam satu sistem terintegrasi.</p>
+
+            <div class="badge-list">
+                <span class="badge-pill-soft">Jadwal Terupdate</span>
+                <span class="badge-pill-soft">Booking Online</span>
+                <span class="badge-pill-soft">Manajemen Antrian</span>
+            </div>
+        </div>
+        <div class="quote">
+            “Sistem yang mengalir” – pastikan data selalu aman dan terkelola dengan baik.
         </div>
     </div>
 </div>
 
 <script>
+// Password toggle
 document.getElementById('togglePassword').addEventListener('click', function () {
     const pwdInput = document.getElementById('password');
-    const type = pwdInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    pwdInput.setAttribute('type', type);
-
-    // optional: ganti icon
+    const type = pwdInput.type === 'password' ? 'text' : 'password';
+    pwdInput.type = type;
     this.textContent = type === 'password' ? '👁' : '🙈';
 });
 </script>
+</body>
+</html>
 
 <?php include 'footer.php'; ?>
